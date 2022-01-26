@@ -10,23 +10,29 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.sql.SQLException;
 import java.util.UUID;
 
 public final class TrackingPoints extends JavaPlugin implements Listener {
 
     private static PlayerPoints playerPoints;
+    private static TrackingPoints main;
     private Logger logger;
+    MySQL mySQL;
 
-    @Override
-    public void onEnable() {
-        hookPlayerPoints();
-        this.logger = new Logger(this);
-        logger.setup();
+    public static TrackingPoints getMain() {
+        return main;
     }
 
     @Override
-    public void onDisable() {
-        // Plugin shutdown logic
+    public void onEnable() {
+        main = this;
+        hookPlayerPoints();
+        logger = new Logger(this);
+        Config.init();
+        logger.setup();
+        new PlaceHolder().register();
+        mySQL = new MySQL(this, Config.host, Config.db, Config.user, Config.pwd, Config.port);
     }
 
     public void hookPlayerPoints() {
@@ -48,7 +54,13 @@ public final class TrackingPoints extends JavaPlugin implements Listener {
         Player player = Bukkit.getPlayer(uuid);
         if (player != null) {
             int current = api.look(uuid);
-            logger.formatMessage(player,point,current+point);
+            try {
+                mySQL.updatePoints(player.getName(), Math.abs(point));
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            } finally {
+                logger.formatMessage(player, point, current + point);
+            }
         }
     }
 }

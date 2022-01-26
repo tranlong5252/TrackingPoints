@@ -1,0 +1,6 @@
+mysql:
+  host: ''
+  dbname: ''
+  user: ''
+  password: ''
+  port: 3306

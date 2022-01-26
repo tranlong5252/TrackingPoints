@@ -4,5 +4,6 @@ main: tranlong5252.trackingpoints.TrackingPoints
 api-version: 1.16
 prefix: TrackingPoints
 depend: [ PlayerPoints ]
+softdepend: [ PlaceholderAPI ]
 authors: [ tranlong5252 ]
 description: Theo dõi biến động PlayerPoints của người chơi
