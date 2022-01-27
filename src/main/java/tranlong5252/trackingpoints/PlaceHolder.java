@@ -42,9 +42,16 @@ public class PlaceHolder extends PlaceholderExpansion {
             return "";
         }
         String arguments = PlaceholderAPI.setBracketPlaceholders(player, args.split("_", 2)[1]);
+        String[] split;
+
         switch (action) {
             case "top" -> {
-                return mySQL.getTop(Integer.parseInt(arguments)) + "";
+                split = arguments.split("_", 2);
+                if (split.length < 2) {
+                    return mySQL.getTop(Integer.parseInt(split[0])) + "";
+                }
+                if (split[1].equals("amount")) return mySQL.getTopValue(Integer.parseInt(split[0])) + "";
+                if (split[1].equals("player")) return mySQL.getTopName(Integer.parseInt(split[0])) + "";
             }
             case "user" -> {
                 return mySQL.getPoints(arguments) + "";

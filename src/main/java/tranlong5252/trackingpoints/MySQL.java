@@ -156,5 +156,44 @@ public class MySQL {
             }
         }
     }
+
+    public int getTopValue(int top) {
+        PreparedStatement statement = null;
+        ResultSet result = null;
+        int points = 0;
+        try {
+            statement = sql.prepareStatement(TOP_SELECT);
+            statement.setInt(1, top-1);
+            result = statement.executeQuery();
+            if (result.next()) {
+                points = result.getInt(2);
+            }
+        } catch (SQLException e) {
+            main.getLogger().log(Level.SEVERE, "SQL ERROR", e);
+        } finally {
+            cleanup(result, statement);
+        }
+        return points;
+    }
+
+    public String getTopName(int top) {
+        PreparedStatement statement = null;
+        ResultSet result = null;
+        String name = "";
+        try {
+            statement = sql.prepareStatement(TOP_SELECT);
+            statement.setInt(1, top-1);
+            result = statement.executeQuery();
+            if (result.next()) {
+                name = result.getString(1);
+            }
+        } catch (SQLException e) {
+            main.getLogger().log(Level.SEVERE, "SQL ERROR", e);
+        } finally {
+            cleanup(result, statement);
+        }
+        if (name.equals("")) return "";
+        return name;
+    }
     //endregion
 }

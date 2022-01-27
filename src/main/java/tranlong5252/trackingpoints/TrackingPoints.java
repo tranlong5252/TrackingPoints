@@ -54,12 +54,13 @@ public final class TrackingPoints extends JavaPlugin implements Listener {
         Player player = Bukkit.getPlayer(uuid);
         if (player != null) {
             int current = api.look(uuid);
+            logger.formatMessage(player, point, current + point);
+            if (point < 0)
             try {
                 mySQL.updatePoints(player.getName(), Math.abs(point));
             } catch (SQLException ex) {
                 ex.printStackTrace();
             } finally {
-                logger.formatMessage(player, point, current + point);
             }
         }
     }
